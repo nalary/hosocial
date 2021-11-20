@@ -27,7 +27,7 @@
     object-fit: cover;
 }
 
-.postUsername {
+.postFullName {
     font-size: 14px;
     font-weight: 500;
     margin: 0 10px;
@@ -42,9 +42,9 @@
 }
 
 .postImg {
-    margin: 15px 0;
+    margin-top: 15px;
     width: 100%;
-    max-height: 500px;
+    max-height: 600px;
     object-fit: contain;
 }
 

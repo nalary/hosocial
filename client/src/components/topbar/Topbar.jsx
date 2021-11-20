@@ -1,11 +1,18 @@
 import "./topbar.css";
 import { Search, Person, Chat, Notifications } from "@material-ui/icons";
+import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function Topbar() {
+    const { user } = useContext(AuthContext);
+
     return (
         <div className="topbarContainer">
             <div className="topbarLeft">
-                <span className="logo">Blue.social</span>
+                <Link to="/" className="link">
+                    <span className="logo">Blue.social</span>
+                </Link>                
             </div>
             <div className="topbarCenter">
                 <div className="searchBar">
@@ -32,7 +39,13 @@ export default function Topbar() {
                         <span className="topbarIconBadge">4</span>
                     </div>
                 </div>
-                <img className="topbarImg" src="/assets/person/jaoh.jpg" alt=""/>
+                <Link to={`/profile/${user.username}`}>
+                    <img 
+                        className="topbarImg" 
+                        src={user.profilePicture || "https://firebasestorage.googleapis.com/v0/b/mern-blog-4c8dc.appspot.com/o/social%2FnoAavatar.png?alt=media&token=383b1c0a-dc20-4c9e-8dca-b943b8f4c63d"} 
+                        alt=""
+                    />
+                </Link>
             </div>
         </div>
     );

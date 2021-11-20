@@ -14,7 +14,7 @@ mongoose.connect(process.env.MONGO_URL, () => {
     console.log("Connected to MongoDB.");
 });
 
-// middlewear
+// middle wear
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("common"));
