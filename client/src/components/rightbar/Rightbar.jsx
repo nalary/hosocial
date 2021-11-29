@@ -1,32 +1,53 @@
 import "./rightbar.css";
-import { Users } from "../../dummyData";
-import Online from "../online/Online";
+// import Online from "../online/Online";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { Add, Remove } from "@material-ui/icons";
+import CloseFriend from "../closeFriend/CloseFriend";
 
 export default function Rightbar({ user }) {   
-    const [friends, setFriends] = useState([]);
     const { user: currentUser, dispatch } = useContext(AuthContext);
+
+    const [profileUserFriends, setProfileUserFriends] = useState([]);
+    const [currentUserFriends, setCurrentUserFriends] = useState([]);    
     const [followed, setFollowed] = useState(currentUser.followings.includes(user?._id));
+
+    const giftIcon = process.env.REACT_APP_GIFT;
+    const adImg = process.env.REACT_APP_AD;
+    const noAvatar = process.env.REACT_APP_NO_AVATAR;
 
     useEffect(() => {
         setFollowed(currentUser.followings.includes(user?._id));
     }, [currentUser, user])
 
     useEffect(() => {
-        const getFriends = async () => {
-            try {
-                const friendsList =  await axios.get("/users/friends/" + user?._id);
-                setFriends(friendsList.data);
-            } catch (err) {
-                console.log(err);
-            }
-        };
-        getFriends();
+        if (user?._id) {
+            const getProfileUserFriends = async () => {
+                try {
+                    const friendsList = await axios.get("/users/friends/" + user?._id);
+                    setProfileUserFriends(friendsList.data);
+                } catch (err) {
+                    console.log(err);
+                }
+            };
+            getProfileUserFriends();
+        }        
     }, [user]);
+
+    useEffect(() => {
+        if (currentUser?._id) {
+            const getCurrentUserFriends = async () => {
+                try {
+                    const friendsList =  await axios.get("/users/friends/" + currentUser?._id);
+                    setCurrentUserFriends(friendsList.data);
+                } catch (err) {
+                    console.log(err);
+                }
+            };
+            getCurrentUserFriends();
+        }         
+    }, [currentUser]);
 
     const followHandler = async () => {
         try {
@@ -47,16 +68,16 @@ export default function Rightbar({ user }) {
         return (
             <>
                 <div className="birthdayContainer">
-                    <img className="birthdayImg" src="https://firebasestorage.googleapis.com/v0/b/mern-blog-4c8dc.appspot.com/o/social%2Fgift.png?alt=media&token=77e00683-5c26-467b-a116-36b08ff35afe" alt=""/>
+                    <img className="birthdayImg" src={giftIcon} alt=""/>
                     <span className="birthdayText">
                         <b>{currentUser.fullName || currentUser.username}</b> and <b>2 other friends</b> have a birthday today.
                     </span>
                 </div>
-                <img className="rightbarAd" src="https://firebasestorage.googleapis.com/v0/b/mern-blog-4c8dc.appspot.com/o/social%2Fad.jpg?alt=media&token=e81dce06-86de-49a1-91e8-ab041a149453" alt=""/>
-                <h4 className="rightbarTitle">Online Friends</h4>
+                <img className="rightbarAd" src={adImg} alt=""/>
+                <h4 className="rightbarTitle">Close Friends</h4>
                 <ul className="rightbarFriendList">
-                    {Users.map(user => (
-                        <Online key={user.id} user={user}/>
+                    {currentUserFriends.map(friend => (
+                        <CloseFriend key={friend._id} friend={friend}/>
                     ))}              
                 </ul>
             </>
@@ -66,11 +87,14 @@ export default function Rightbar({ user }) {
     const ProfileRightbar = () => {
         return (
             <>
-                {user.username !== currentUser.username && (
-                    <button className="rightbarFollowButton" onClick={followHandler}>
-                        {followed ? "Unfollow" : "Follow"}
-                        {followed ? <Remove /> : <Add />}
-                    </button>
+                {user?.username !== currentUser?.username && (
+                    <button 
+                        className={followed ? "rightbarFollowButton followed" : "rightbarFollowButton"} 
+                        onClick={followHandler}
+                    >                        
+                        {followed ? <i className="fas fa-user-check"></i> : <i className="fas fa-user-plus"></i>}
+                        {followed ? "Following" : "Follow"}
+                    </button>                    
                 )}
                 <h4 className="rightbarTitle">User Information</h4>
                 <div className="rightbarInfo">
@@ -91,12 +115,12 @@ export default function Rightbar({ user }) {
                 </div>
                 <h4 className="rightbarTitle">User Friends</h4>
                 <div className="rightbarFollowings">                
-                        {friends.map(friend => (    
-                        <div className="rightbarFollowing">
+                    {profileUserFriends.map(friend => (    
+                        <div key={friend._id} className="rightbarFollowing">
                             <Link to={`/profile/${friend.username}`} className="link">
                             <img
                                 className="rightbarFollowingImg"
-                                src={friend.profilePicture || "https://firebasestorage.googleapis.com/v0/b/mern-blog-4c8dc.appspot.com/o/social%2FnoAavatar.png?alt=media&token=383b1c0a-dc20-4c9e-8dca-b943b8f4c63d"}
+                                src={friend.profilePicture || noAvatar}
                                 alt="" 
                             />
                             </Link>                  

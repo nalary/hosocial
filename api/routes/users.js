@@ -15,10 +15,15 @@ router.put("/:id", async (req, res) => {
         }
 
         try {
-            await User.findByIdAndUpdate(req.params.id, {
-                $set: req.body,
-            });
-            res.status(200).json("Account has been updated.");
+            const updatedUser = await User.findByIdAndUpdate(
+                req.params.id, 
+                {
+                    $set: req.body,
+                },
+                { new : true }
+            );
+            const { password, ...others } = updatedUser._doc;
+            res.status(200).json(others);
         } catch (err) {
             res.status(500).json(err);
         }
@@ -56,11 +61,38 @@ router.get("/", async (req, res) => {
     }
 });
 
+// get all users
+router.get("/all", async (req, res) => {
+    try {
+        const users = await User.find();
+        res.status(200).json(users);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+// get recommend friends
+router.get("/recommend/:userId", async (req, res) => {
+    try {        
+        const currentUser = await User.findById(req.params.userId);  
+        const users = await User.find(
+            { _id: {$ne: currentUser._id} }
+        );
+      
+        let friendsList = [];
+        friendsList = users.filter(user => !currentUser.followings.includes(user._id));
+
+        res.status(200).json(friendsList);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 // get friends
 router.get("/friends/:userId", async (req, res) => {
     try {
         const user = await User.findById(req.params.userId);
-        const friends = await Promise.all (
+        const friends = await Promise.all(
             user.followings.map(friendId => {
                 return User.findById(friendId);
             })

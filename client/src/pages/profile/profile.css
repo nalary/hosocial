@@ -45,6 +45,19 @@
     font-weight: 300;
 }
 
+.profileSettingsButton {
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: 500;
+    margin: 20px;
+    background-color: lightcoral;
+    color: white;
+    align-self: end;
+    cursor: pointer;
+}
+
 .profileRightBottom {
     display: flex;
 }

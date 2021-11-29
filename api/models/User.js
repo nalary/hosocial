@@ -42,8 +42,7 @@ const UserSchema = new mongoose.Schema(
         },
         fullName: {
             type: String,
-            max: 30,
-            unique: true,        
+            max: 30,        
         },
         desc: {
             type: String,

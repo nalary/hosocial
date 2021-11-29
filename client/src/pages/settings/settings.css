@@ -1,0 +1,137 @@
+.settings {
+    display: flex;
+}
+
+.settingsWrapper {
+    flex: 9;
+}
+
+.settingsForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.settingsCover {
+    height: 320px;
+    position: relative;
+}
+
+.settingsCoverImg {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.settingsCoverIcon {
+    font-size: 25px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.settingsUserImg {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 150px;
+    border: 3px solid white;
+}
+
+.settingsUserIconWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.settingsUserIcon {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: lightcoral;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.settingsInputWrapper {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.settingsInput {
+    display: flex;
+    flex-direction: column;
+    margin: 0 15px;
+}
+
+.settingsInput > label {
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+.settingsInput > input, .settingsInput > select {
+    width: max-content;
+    color: gray;
+    margin: 10px 0;
+    height: 30px;
+    border: none;
+    border-bottom: 1px solid lightgray;
+}
+
+.settingsInput > select {
+    padding-right: 15px;
+}
+
+.settingsInput > textarea {
+    width: max-content;
+    color: gray;
+    margin-top: 20px;
+    height: 115px;
+    border: none;
+    border-bottom: 1px solid lightgray;
+    resize: none;
+}
+
+.settingsInput > input:focus, .settingsInput > textarea:focus, .settingsInput > select:focus {
+    outline: none;
+}
+
+.settingsSubmit {
+    width: 150px;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    align-self: center;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    background-color: teal;
+    padding: 10px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.settingsDeleteTitle {
+    color: red;
+    font-size: 12px;
+    margin-top: 15px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.settingsLogoutTitle {
+    color: teal;
+    font-size: 12px;
+    margin-top: 15px;
+    text-align: center;
+    cursor: pointer;
+}

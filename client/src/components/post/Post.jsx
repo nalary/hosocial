@@ -12,6 +12,10 @@ export default function Post({ post }) {
     const [user, setUser] = useState({});
     const { user: currentUser } = useContext(AuthContext);
 
+    const noAvatar = process.env.REACT_APP_NO_AVATAR;
+    const likeIcon = process.env.REACT_APP_LIKE;
+    const heartIcon = process.env.REACT_APP_HEART;
+
     useEffect(() => {
         setIsLiked(post.likes.includes(currentUser._id));
     }, [currentUser._id, post.likes]);
@@ -39,17 +43,17 @@ export default function Post({ post }) {
         <div className="post">
             <div className="postWrapper">
                 <div className="postTop">
-                    <div className="postTopLeft">
-                        <Link to={`/profile/${user.username}`}>
+                    <Link to={`/profile/${user.username}`} className="link">
+                        <div className="postTopLeft">
                             <img
                                 className="postProfileImg" 
-                                src={user.profilePicture ? user.profilePicture : "https://firebasestorage.googleapis.com/v0/b/mern-blog-4c8dc.appspot.com/o/social%2FnoAavatar.png?alt=media&token=383b1c0a-dc20-4c9e-8dca-b943b8f4c63d"} 
+                                src={user.profilePicture ? user.profilePicture : noAvatar} 
                                 alt=""                         
-                            />                            
-                        </Link>
-                        <span className="postFullName">{user.fullName || user.username}</span>                        
-                        <span className="postDate">{format(post.createdAt)}</span>
-                    </div>
+                            /> 
+                            <span className="postFullName">{user.fullName || user.username}</span>                         
+                            <span className="postDate">{format(post.createdAt)}</span>
+                        </div>
+                    </Link>
                     <div className="postTopRight">
                         <MoreVert />
                     </div>
@@ -68,13 +72,13 @@ export default function Post({ post }) {
                     <div className="postBottomLeft">
                         <img 
                             className="postLikeIcon" 
-                            src="https://firebasestorage.googleapis.com/v0/b/mern-blog-4c8dc.appspot.com/o/social%2Flike.png?alt=media&token=4a8da8ec-b0f2-44da-b258-9bef484b7f08"
+                            src={likeIcon}
                             alt="" 
                             onClick={likeHandler}
                         />
                         <img 
                             className="postLikeIcon" 
-                            src="https://firebasestorage.googleapis.com/v0/b/mern-blog-4c8dc.appspot.com/o/social%2Fheart.png?alt=media&token=3f0f79d0-0cc7-4601-b936-1256542e92b8"
+                            src={heartIcon}
                             alt="" 
                             onClick={likeHandler}
                         />

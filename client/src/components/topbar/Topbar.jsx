@@ -7,6 +7,8 @@ import { AuthContext } from "../../context/AuthContext";
 export default function Topbar() {
     const { user } = useContext(AuthContext);
 
+    const noAvatar = process.env.REACT_APP_NO_AVATAR;
+
     return (
         <div className="topbarContainer">
             <div className="topbarLeft">
@@ -21,19 +23,21 @@ export default function Topbar() {
                 </div>
             </div>
             <div className="topbarRight">
-                <div className="topbarLinks">
+                {/* <div className="topbarLinks">
                     <span className="topbarLink">Homepage</span>
                     <span className="topbarLink">Timeline</span>
-                </div>
+                </div> */}
                 <div className="topbarIcons">
                     <div className="topbarIconItem">
                         <Person />
                         <span className="topbarIconBadge">2</span>
                     </div>                
-                    <div className="topbarIconItem">
-                        <Chat />
-                        <span className="topbarIconBadge">3</span>
-                    </div>
+                    <Link to="/messenger" className="link">
+                        <div className="topbarIconItem">
+                            <Chat />
+                            <span className="topbarIconBadge">3</span>
+                        </div>
+                    </Link>
                     <div className="topbarIconItem">
                         <Notifications />
                         <span className="topbarIconBadge">4</span>
@@ -42,10 +46,11 @@ export default function Topbar() {
                 <Link to={`/profile/${user.username}`}>
                     <img 
                         className="topbarImg" 
-                        src={user.profilePicture || "https://firebasestorage.googleapis.com/v0/b/mern-blog-4c8dc.appspot.com/o/social%2FnoAavatar.png?alt=media&token=383b1c0a-dc20-4c9e-8dca-b943b8f4c63d"} 
+                        src={user.profilePicture || noAvatar} 
                         alt=""
-                    />
+                    />                    
                 </Link>
+                <span className="topbarLink">{user.fullName || user.username}</span>
             </div>
         </div>
     );

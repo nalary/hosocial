@@ -1,21 +1,21 @@
-.closeFriend {
+.recommendFriend {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
 }
 
-.closeProfileImgContainer {
+.recommendProfileImgContainer {
     margin-right: 10px;
     position: relative;
 }
 
-.closeProfileImg {
+.recommendProfileImg {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
 }
 
-.closeUsername {
+.recommendUsername {
     font-weight: 500;   
 }
