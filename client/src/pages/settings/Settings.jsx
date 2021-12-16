@@ -98,7 +98,7 @@ export default function Settings() {
                             <input 
                                 type="file" 
                                 id="coverImgInput"
-                                name="coverImgInput" 
+                                // name="coverImgInput" 
                                 style={{display: "none"}}
                                 onChange={e => setCoverImg(e.target.files[0])}
                             />                           
@@ -110,7 +110,7 @@ export default function Settings() {
                             <input 
                                 type="file" 
                                 id="userImgInput"
-                                name="userImgInput"
+                                // name="userImgInput"
                                 style={{display: "none"}} 
                                 onChange={e => setUserImg(e.target.files[0])} 
                             />                            

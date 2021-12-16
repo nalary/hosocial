@@ -5,7 +5,7 @@ import axios from 'axios';
 export default function Conversation({ conversation, currentUser }) {
     const [user, setUser] = useState(null);
 
-    const noAvatar = process.env.REACT_NO_AVATAR;
+    const noAvatar = process.env.REACT_APP_NO_AVATAR;
 
     useEffect(() => {
         const friendId = conversation.members.find(member => member !== currentUser._id);

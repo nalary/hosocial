@@ -23,7 +23,7 @@ export default function ChatOnline({ onlineUsers, currentUserId, setCurrentChat,
     useEffect(() => {
         setOnlineFriends(friends.filter(friend => onlineUsers.includes(friend._id)));
     }, [friends, onlineUsers]);
-
+    
     const handleClick = async (friend) => {
         try {
             const getResponse = await axios.get(`/conversations/find/${currentUserId}/${friend._id}`);

@@ -20,7 +20,7 @@ export default function Sidebar() {
         }
         };
         getRecommendFriends();
-    });
+    }, [currentUser._id]);
 
     return (
         <div className="sidebar">

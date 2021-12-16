@@ -54,7 +54,7 @@ export default function Messenger() {
             }
         };
         getConversations();
-    }, [user._id]);
+    }, [user._id, arrivalMessage]);
 
     useEffect(() => {
         const getMessages = async () => {
@@ -73,6 +73,7 @@ export default function Messenger() {
         const message = {
             conversationId: currentChat._id,
             sender: user._id,
+            senderPicture: user.profilePicture,
             text: newMessage
         }
 
@@ -117,7 +118,10 @@ export default function Messenger() {
                                 <div className="chatBoxTop">
                                     {messages.map(message => (
                                         <div key={message._id}  ref={scrollRef}>
-                                            <Message message={message} own={message.sender === user._id}/>
+                                            <Message 
+                                                message={message} 
+                                                own={message.sender === user._id}
+                                            />
                                         </div>
                                     ))}
                                 </div>

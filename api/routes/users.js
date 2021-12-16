@@ -74,15 +74,26 @@ router.get("/all", async (req, res) => {
 // get recommend friends
 router.get("/recommend/:userId", async (req, res) => {
     try {        
-        const currentUser = await User.findById(req.params.userId);  
-        const users = await User.find(
-            { _id: {$ne: currentUser._id} }
-        );
-      
-        let friendsList = [];
-        friendsList = users.filter(user => !currentUser.followings.includes(user._id));
+        const currentUser = await User.findById(req.params.userId);
+
+        let exceptUsers = currentUser.followings;
+        exceptUsers.push(currentUser._id);
+   
+        const friendsList = await User.aggregate([
+            { $match: { _id: {$nin: exceptUsers} } },
+            { $sample: { size: 5 } },
+        ]);
 
         res.status(200).json(friendsList);
+
+        // const users = await User.find(
+        //     { _id: {$ne: currentUser._id} }
+        // );
+      
+        // let friendsList = [];
+        // friendsList = users.filter(user => !currentUser.followings.includes(user._id));
+
+        // res.status(200).json(friendsList);
     } catch (err) {
         res.status(500).json(err);
     }
