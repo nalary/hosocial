@@ -36,9 +36,9 @@ export default function Register() {
         <div className="register">
             <div className="registerWrapper">
                 <div className="registerLeft">
-                    <h3 className="registerLogo">Blue.social</h3>
+                    <h3 className="registerLogo">Ho.social</h3>
                     <span className="registerDesc">
-                        Connect with friends and the world around you on Blue.social.
+                        Connect with friends and the world around you on Ho.social.
                     </span>
                 </div>
                 <div className="registerRight">

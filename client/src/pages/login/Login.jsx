@@ -22,9 +22,9 @@ export default function Login() {
         <div className="login">
             <div className="loginWrapper">
                 <div className="loginLeft">
-                    <h3 className="loginLogo">Blue.social</h3>
+                    <h3 className="loginLogo">Ho.social</h3>
                     <span className="loginDesc">
-                        Connect with friends and the world around you on Blue.social.
+                        Connect with friends and the world around you on Ho.social.
                     </span>
                 </div>
                 <div className="loginRight">

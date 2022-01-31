@@ -13,7 +13,7 @@ export default function Topbar() {
         <div className="topbarContainer">
             <div className="topbarLeft">
                 <Link to="/" className="link">
-                    <span className="logo">Blue.social</span>
+                    <span className="logo">Ho.social</span>
                 </Link>                
             </div>
             <div className="topbarCenter">

@@ -25,7 +25,8 @@ export default function Messenger() {
         socket.current.on("getMessage", data => {
             setArrivalMessage({
                 sender: data.senderId,
-                text: data.text,
+                senderPicture: data.senderPicture,
+                text: data.text,                
                 createdAt: Date.now()
             });
         });
@@ -80,6 +81,7 @@ export default function Messenger() {
         const receiverId = currentChat.members.find(member => member !== user._id);
         socket.current.emit("sendMessage", {
             senderId: user._id,
+            senderPicture: user.profilePicture,
             receiverId,
             text: newMessage
         });
@@ -116,9 +118,9 @@ export default function Messenger() {
                         {currentChat ? (
                             <>
                                 <div className="chatBoxTop">
-                                    {messages.map(message => (
-                                        <div key={message._id}  ref={scrollRef}>
-                                            <Message 
+                                    {messages.map((message, index) => (
+                                        <div key={index} ref={scrollRef}>
+                                            <Message
                                                 message={message} 
                                                 own={message.sender === user._id}
                                             />
