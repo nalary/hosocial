@@ -17,12 +17,12 @@ export const SocketContextProvider = ({ children }) => {
     const [state, dispatch] = useReducer(SocketReducer, INITIAL_STATE);
 
     useEffect(() => {
-        state.socket.emit("addUser", user._id);      
+        state.socket.emit("addUser", user?._id);      
 
         state.socket.on("getUsers", onlineUsers => {
             dispatch({ 
                 type: "ONLINE_USERS", 
-                payload: user.followings.filter(following => onlineUsers.some(user => user.userId === following)), 
+                payload: user?.followings.filter(following => onlineUsers.some(user => user.userId === following)), 
             });
             console.log("getUsers");
         });
@@ -32,7 +32,7 @@ export const SocketContextProvider = ({ children }) => {
         state.socket.on('userLeft', onlineUsers => {
             dispatch({ 
                 type: "ONLINE_USERS", 
-                payload: user.followings.filter(following => onlineUsers.some(user => user.userId === following)), 
+                payload: user?.followings.filter(following => onlineUsers.some(user => user.userId === following)), 
             });
             console.log("userLeft");
         });
