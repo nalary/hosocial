@@ -39,3 +39,8 @@ export const Unfollow = (userId) => ({
     type: "UNFOLLOW",
     payload: userId,
 });
+
+export const OnlineUsers = (users) => ({
+    type: "ONLINE_USERS",
+    payload: users,
+});

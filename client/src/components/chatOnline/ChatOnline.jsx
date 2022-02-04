@@ -1,4 +1,4 @@
-import axios from "axios";
+import { axiosInstance } from "../../config";
 import { useEffect, useState } from "react";
 import "./chatOnline.css";
 
@@ -11,7 +11,7 @@ export default function ChatOnline({ onlineUsers, currentUserId, setCurrentChat,
     useEffect(() => {
         const getFriends = async () => {
             try {
-                const res = await axios.get("/users/friends/" + currentUserId);
+                const res = await axiosInstance.get("/users/friends/" + currentUserId);
                 setFriends(res.data);
             } catch (err) {
                 console.log(err);
@@ -26,13 +26,13 @@ export default function ChatOnline({ onlineUsers, currentUserId, setCurrentChat,
     
     const handleClick = async (friend) => {
         try {
-            const getResponse = await axios.get(`/conversations/find/${currentUserId}/${friend._id}`);
+            const getResponse = await axiosInstance.get(`/conversations/find/${currentUserId}/${friend._id}`);
             if (!getResponse.data) {
                 const newConversation = {
                     senderId: currentUserId, 
                     receiverId: friend._id
                 };
-                const postResponse = await axios.post("/conversations", newConversation); 
+                const postResponse = await axiosInstance.post("/conversations", newConversation); 
                 setCurrentChat(postResponse.data);
                 setConversations((prev) => [...prev, postResponse.data]);
             } else {
@@ -45,7 +45,7 @@ export default function ChatOnline({ onlineUsers, currentUserId, setCurrentChat,
 
     return (
         <div className="chatOnline">                           
-            {friends.map(friend => (
+            {onlineFriends.map(friend => (
                 <div key={friend._id} className="chatOnlineFriend" onClick={() => handleClick(friend)}> 
                     <div className="chatOnlineImgContainer">
                         <img 
@@ -53,7 +53,7 @@ export default function ChatOnline({ onlineUsers, currentUserId, setCurrentChat,
                             alt="" 
                             className="chatOnlineImg" 
                         />
-                        {onlineFriends.some(online => online._id === friend._id) && <div className="chatOnlineBadge"></div>}                                            
+                        <div className="chatOnlineBadge"></div>                                   
                     </div>                               
                     <span className="chatOnlineName">{friend.fullName || friend.username}</span>
                 </div>

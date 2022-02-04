@@ -1,16 +1,18 @@
 import { MoreVert } from "@material-ui/icons";
 import "./post.css";
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/authContext/AuthContext";
+import { SocketContext } from "../../context/socketContext/SocketContext";
+import { axiosInstance } from "../../config";
 
 export default function Post({ post }) {
     const [like, setLike] = useState(post.likes.length);
     const [isLiked, setIsLiked] = useState(false);
     const [user, setUser] = useState({});
     const { user: currentUser } = useContext(AuthContext);
+    const { socket } = useContext(SocketContext);
 
     const noAvatar = process.env.REACT_APP_NO_AVATAR;
     const likeIcon = process.env.REACT_APP_LIKE;
@@ -22,7 +24,7 @@ export default function Post({ post }) {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const res = await axios.get(`/users?userId=${post.userId}`);
+            const res = await axiosInstance.get(`/users?userId=${post.userId}`);
             setUser(res.data);
         }
         fetchUser();
@@ -30,13 +32,24 @@ export default function Post({ post }) {
 
     const likeHandler = async () => {
         try {
-            await axios.put(`/posts/${post._id}/like`, {userId: currentUser._id});
+            await axiosInstance.put(`/posts/${post._id}/like`, {userId: currentUser._id});
             
         } catch (err) {
 
         }
+
+        if (!isLiked) {
+            socket.emit("sendNotification", {
+                senderName: currentUser.username,
+                fullName: currentUser.fullName,
+                receiverId: post.userId,
+                type: 'like'
+            });
+            console.log("sendNotification");
+        }
+
         setLike(isLiked ? like - 1 : like + 1);
-        setIsLiked(!isLiked);        
+        setIsLiked(!isLiked);
     };
 
     return (

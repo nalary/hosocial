@@ -1,13 +1,14 @@
 import "./rightbar.css";
-// import Online from "../online/Online";
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/authContext/AuthContext";
 import CloseFriend from "../closeFriend/CloseFriend";
+import { SocketContext } from "../../context/socketContext/SocketContext";
+import { axiosInstance } from "../../config";
 
 export default function Rightbar({ user }) {   
     const { user: currentUser, dispatch } = useContext(AuthContext);
+    const { socket, onlineUsers } = useContext(SocketContext);
 
     const [profileUserFriends, setProfileUserFriends] = useState([]);
     const [currentUserFriends, setCurrentUserFriends] = useState([]);    
@@ -25,7 +26,7 @@ export default function Rightbar({ user }) {
         if (user?._id) {
             const getProfileUserFriends = async () => {
                 try {
-                    const friendsList = await axios.get("/users/friends/" + user?._id);
+                    const friendsList = await axiosInstance.get("/users/friends/" + user?._id);
                     setProfileUserFriends(friendsList.data);
                 } catch (err) {
                     console.log(err);
@@ -39,7 +40,7 @@ export default function Rightbar({ user }) {
         if (currentUser?._id) {
             const getCurrentUserFriends = async () => {
                 try {
-                    const friendsList =  await axios.get("/users/friends/" + currentUser?._id);
+                    const friendsList =  await axiosInstance.get("/users/friends/" + currentUser?._id);
                     setCurrentUserFriends(friendsList.data);
                 } catch (err) {
                     console.log(err);
@@ -52,11 +53,18 @@ export default function Rightbar({ user }) {
     const followHandler = async () => {
         try {
             if (followed) {
-                await axios.put(`/users/${user._id}/unfollow`, { userId: currentUser._id });
+                await axiosInstance.put(`/users/${user._id}/unfollow`, { userId: currentUser._id });
                 dispatch({ type: "UNFOLLOW", payload: user._id });
             } else {
-                await axios.put(`/users/${user._id}/follow`, { userId: currentUser._id });
-                dispatch({ type: "FOLLOW", payload: user._id });
+                await axiosInstance.put(`/users/${user._id}/follow`, { userId: currentUser._id });
+                dispatch({ type: "FOLLOW", payload: user._id });       
+                
+                socket.emit("sendNotification", {
+                    senderName: currentUser.username,
+                    fullName: currentUser.fullName,                    
+                    receiverId: user._id,
+                    type: 'follow'
+                });         
             }            
         } catch (err) {
             console.log(err);
@@ -77,7 +85,7 @@ export default function Rightbar({ user }) {
                 <h4 className="rightbarTitle">Close Friends</h4>
                 <ul className="rightbarFriendList">
                     {currentUserFriends.map(friend => (
-                        <CloseFriend key={friend._id} friend={friend}/>
+                        <CloseFriend key={friend._id} friend={friend} onlineUsers={onlineUsers}/>
                     ))}              
                 </ul>
             </>

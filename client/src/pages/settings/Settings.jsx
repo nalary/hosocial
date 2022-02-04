@@ -1,11 +1,11 @@
 import { useContext, useRef, useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Topbar from "../../components/topbar/Topbar";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/authContext/AuthContext";
 import "./settings.css";
 import { updateCall } from "../../apiCalls";
-import axios from 'axios';
 import upload from "../../upload";
+import { axiosInstance } from "../../config";
 
 export default function Settings() {
     const { user, dispatch } = useContext(AuthContext);
@@ -28,7 +28,7 @@ export default function Settings() {
 
     const handleDelete = async () => {
         try {
-            await axios.delete(`/users/${user._id}`, {
+            await axiosInstance.delete(`/users/${user._id}`, {
                 data: {userId : user._id}
             });
             dispatch({ type: "LOGOUT" });
@@ -36,10 +36,6 @@ export default function Settings() {
         } catch (err) {
             console.log(err);
         }     
-    };
-
-    const handleLogout = () => {
-        dispatch({ type: "LOGOUT" });
     };
 
     const handleSubmit = async (e) => {
@@ -121,7 +117,6 @@ export default function Settings() {
                             </label>
                         </div>
 
-                        <span className="settingsLogoutTitle" onClick={handleLogout}>Logout</span>
                         <span className="settingsDeleteTitle" onClick={handleDelete}>Delete Account</span>
                         
                         <div className="settingsInputWrapper">

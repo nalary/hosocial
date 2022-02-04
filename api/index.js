@@ -9,8 +9,10 @@ const userRoute = require("./routes/users");
 const postRoute = require("./routes/posts");
 const conversationRoute = require("./routes/conversations");
 const messageRoute = require("./routes/messages");
+const cors = require('cors');
 
 dotenv.config();
+app.use(cors());
 
 mongoose.connect(process.env.MONGO_URL, () => {
     console.log("Connected to MongoDB.");
@@ -27,6 +29,6 @@ app.use("/api/posts", postRoute);
 app.use("/api/conversations", conversationRoute);
 app.use("/api/messages", messageRoute);
 
-app.listen(8800, () => {
+app.listen(process.env.PORT || 8800, () => {
     console.log("Backend server is running.");
 });

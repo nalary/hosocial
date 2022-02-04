@@ -4,14 +4,16 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Topbar from "../../components/topbar/Topbar";
 import "./profile.css";
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
 import { useParams } from "react-router";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/authContext/AuthContext";
 import { Link } from "react-router-dom";
+import { SocketContext } from "../../context/socketContext/SocketContext";
+import { axiosInstance } from "../../config";
 
 export default function Profile() {
     const [user, setUser] = useState({})
     const { user: currentUser } = useContext(AuthContext);
+    const { notifications, dispatch } = useContext(SocketContext);
 
     const username = useParams().username;
 
@@ -19,9 +21,15 @@ export default function Profile() {
     const noCover = process.env.REACT_APP_NO_COVER;
 
     useEffect(() => {
+        if (notifications.filter(notification => notification.type === 'follow').length > 0) {
+            dispatch({ type: "READ_NOTIFICATIONS", payload: 'follow' });
+        }
+    }, [dispatch, notifications]);
+
+    useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await axios.get(`/users?username=${username}`);         
+                const res = await axiosInstance.get(`/users?username=${username}`);         
                 setUser(res.data);    
             } catch (err) {
                 console.log(err);

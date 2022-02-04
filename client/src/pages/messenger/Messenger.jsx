@@ -3,34 +3,32 @@ import Topbar from "../../components/topbar/Topbar";
 import Conversation from "../../components/conversation/Conversation";
 import Message from "../../components/message/Message";
 import ChatOnline from "../../components/chatOnline/ChatOnline";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/authContext/AuthContext";
 import { useContext, useEffect, useRef, useState } from "react";
-import axios from 'axios';
-import io from 'socket.io-client';
+import { SocketContext } from "../../context/socketContext/SocketContext";
+import { axiosInstance } from "../../config";
 
 export default function Messenger() {
+    const { user } = useContext(AuthContext);
+    const { socket, onlineUsers, notifications, message: msg ,dispatch } = useContext(SocketContext);
+
     const [conversations, setConversations] = useState([]);
     const [currentChat, setCurrentChat] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
-    const [arrivalMessage, setArrivalMessage] = useState(null);
-    const [onlineUsers, setOnlineUsers] = useState([]);
-    
-    const { user } = useContext(AuthContext);
+    const [arrivalMessage, setArrivalMessage] = useState(msg);
+
     const scrollRef = useRef();
-    const socket = useRef();
 
     useEffect(() => {
-        socket.current = io("ws://localhost:8900");
-        socket.current.on("getMessage", data => {
-            setArrivalMessage({
-                sender: data.senderId,
-                senderPicture: data.senderPicture,
-                text: data.text,                
-                createdAt: Date.now()
-            });
-        });
-    }, []);
+        if (notifications.filter(notification => notification.type === 'message').length > 0) {
+            dispatch({ type: "READ_NOTIFICATIONS", payload: 'message' });
+        }
+    }, [dispatch, notifications]);
+
+    useEffect(() => {
+        setArrivalMessage(msg);
+    }, [msg]);
 
     useEffect(() => {
         arrivalMessage && 
@@ -39,16 +37,9 @@ export default function Messenger() {
     }, [arrivalMessage, currentChat]);
 
     useEffect(() => {
-        socket.current.emit("addUser", user._id);
-        socket.current.on("getUsers", users => {
-            setOnlineUsers(user.followings.filter(following => users.some(user => user.userId === following)));
-        })
-    }, [user]);
-
-    useEffect(() => {
         const getConversations = async () => {
             try {
-                const res = await axios.get("/conversations/" + user?._id);
+                const res = await axiosInstance.get("/conversations/" + user?._id);
                 setConversations(res.data);
             } catch (err) {
                 console.log(err);
@@ -60,7 +51,7 @@ export default function Messenger() {
     useEffect(() => {
         const getMessages = async () => {
             try {
-                const res = await axios.get("/messages/" + currentChat?._id);
+                const res = await axiosInstance.get("/messages/" + currentChat?._id);
                 setMessages(res.data);
             } catch (err) {
                 console.log(err);
@@ -79,15 +70,22 @@ export default function Messenger() {
         }
 
         const receiverId = currentChat.members.find(member => member !== user._id);
-        socket.current.emit("sendMessage", {
+        socket.emit("sendMessage", {
             senderId: user._id,
             senderPicture: user.profilePicture,
             receiverId,
             text: newMessage
         });
 
+        socket.emit("sendNotification", {
+            senderName: user.username,
+            fullName: user.fullName,
+            receiverId: receiverId,
+            type: 'message'
+        });
+
         try {
-            const res = await axios.post("/messages", message);
+            const res = await axiosInstance.post("/messages", message);
             setMessages([...messages, res.data]);
             setNewMessage("");
         } catch (err) {
@@ -101,7 +99,7 @@ export default function Messenger() {
 
     return (
         <>
-            <Topbar />
+            <Topbar socket={socket}/>
             <div className="messenger">
                 <div className="chatMenu">
                     <div className="chatMenuWrapper">

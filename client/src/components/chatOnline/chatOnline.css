@@ -25,6 +25,7 @@
     border-radius: 50%;
     background-color: limegreen;
     position: absolute;
-    top: 2px;
-    right: 2px;
+    border: 2px solid white;
+    bottom: 0px;
+    right: 0px;
 }

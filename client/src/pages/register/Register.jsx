@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { axiosInstance } from "../../config";
 import "./register.css";
 
 export default function Register() {
@@ -22,7 +22,7 @@ export default function Register() {
             };
 
             try {                
-                await axios.post("/auth/register", user);
+                await axiosInstance.post("/auth/register", user);
                 // all for router-react-dom v6
                 // change useHistory to useNavigate
                 navigate("/login");

@@ -1,7 +1,7 @@
 import { useContext, useRef } from "react";
 import "./login.css";
 import { loginCall } from "../../apiCalls";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/authContext/AuthContext";
 import { CircularProgress } from "@material-ui/core";
 import { Link } from "react-router-dom";
 

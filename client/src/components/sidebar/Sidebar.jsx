@@ -2,8 +2,9 @@ import "./sidebar.css";
 import { Bookmark, Chat, Event, Group, HelpOutline, PlayCircleFilledOutlined, RssFeed, School, WorkOutline } from "@material-ui/icons";
 import RecommendFriend from "../recommendFriend/RecommendFriend";
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/authContext/AuthContext";
+import { Link } from "react-router-dom";
+import { axiosInstance } from "../../config";
 
 export default function Sidebar() {
     const [recommendFriends, setRecommendFriends] = useState([]);
@@ -13,14 +14,14 @@ export default function Sidebar() {
     useEffect(() => {
         const getRecommendFriends = async () => {
         try {
-            const res = await axios.get("/users/recommend/" + currentUser._id);
+            const res = await axiosInstance.get("/users/recommend/" + currentUser._id);
             setRecommendFriends(res.data);
         } catch (err) {
             console.log(err);
         }
         };
         getRecommendFriends();
-    }, [currentUser._id]);
+    }, [currentUser._id, currentUser.followings]);
 
     return (
         <div className="sidebar">
@@ -30,10 +31,12 @@ export default function Sidebar() {
                         <RssFeed className="sidebarIcon"/>
                         <span className="sidebarListItemText">Feed</span>
                     </li>
-                    <li className="sidebarListItem">
-                        <Chat className="sidebarIcon"/>
-                        <span className="sidebarListItemText">Chats</span>
-                    </li>
+                    <Link to="/messenger" className="link">
+                        <li className="sidebarListItem">
+                            <Chat className="sidebarIcon"/>
+                            <span className="sidebarListItemText">Chats</span>
+                        </li>
+                    </Link>
                     <li className="sidebarListItem">
                         <PlayCircleFilledOutlined className="sidebarIcon"/>
                         <span className="sidebarListItemText">Videos</span>
@@ -69,7 +72,12 @@ export default function Sidebar() {
                         </li> 
                     }
                 </ul>
-                <button className="sidebarButton" onClick={() => setShowMore(!showMore)}>Show More</button>
+                <button 
+                    className="sidebarButton" 
+                    onClick={() => setShowMore(!showMore)}
+                >
+                    Show {showMore ? "Less" : "More"}
+                </button>
                 <hr className="sidebarHr" />
                 <h4 className="sidebarTitle">Recommend Friends</h4>
                 <ul className="sidebarFriendList">

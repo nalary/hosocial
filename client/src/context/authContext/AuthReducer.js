@@ -42,21 +42,29 @@ const AuthReducer = (state, action) => {
                 error: true
             };
         case "FOLLOW":        
-        return {
-            ...state,
-            user: {
-                ...state.user,
-                followings: [...state.user.followings, action.payload],
-            },
-        };
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    followings: [...state.user.followings, action.payload],
+                },
+            };
         case "UNFOLLOW":        
-        return {
-            ...state,
-            user: {
-                ...state.user,
-                followings: state.user.followings.filter(following => following !== action.payload),
-            },
-        };
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    followings: state.user.followings.filter(following => following !== action.payload),
+                },
+            };
+        case "ONLINE_USERS":        
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    onlineUsers: action.payload,
+                },
+            };
         default:
             return state;
     }
